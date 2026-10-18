@@ -15506,3 +15506,45 @@ html.dark .product-quantity-control button{
     font-size: 31px;
   }
 }
+
+/* Prevent horizontal scrolling on mobile */
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: clip;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img,
+video,
+iframe {
+  max-width: 100%;
+}
+
+body {
+  min-width: 0;
+}
+
+button,
+input,
+textarea,
+select {
+  max-width: 100%;
+}
+
+/* Keep the main page within the phone screen */
+main,
+section,
+.container,
+.hero {
+  max-width: 100%;
+}
