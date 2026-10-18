@@ -251,76 +251,77 @@ function ProductDetails() {
                 </div>
 
               </div>
+{/* Quantity and Add to Cart */}
+<div className="product-details-actions">
+  <div className="product-purchase">
+    {/* Quantity selector */}
+    <div className="product-quantity-control">
+      <button
+        type="button"
+        onClick={decreaseQuantity}
+        disabled={quantity <= 1}
+        aria-label="Decrease quantity"
+      >
+        <FaMinus />
+      </button>
 
-              {/* Quantity and Add to Cart */}
-              <div className="product-purchase">
+      <span>{quantity}</span>
 
-                <div className="product-quantity-control">
-                  <button
-                    type="button"
-                    onClick={decreaseQuantity}
-                    disabled={quantity <= 1}
-                    aria-label="Decrease quantity"
-                  >
-                    <FaMinus />
-                  </button>
+      <button
+        type="button"
+        onClick={increaseQuantity}
+        aria-label="Increase quantity"
+      >
+        <FaPlus />
+      </button>
+    </div>
 
-                  <span>{quantity}</span>
+    {/* Add to Cart */}
+    <button
+      type="button"
+      className={`product-add-cart-button ${
+        added ? "product-added" : ""
+      }`}
+      onClick={handleAddToCart}
+    >
+      {added ? <FaCheck /> : <FaShoppingCart />}
 
-                  <button
-                    type="button"
-                    onClick={increaseQuantity}
-                    aria-label="Increase quantity"
-                  >
-                    <FaPlus />
-                  </button>
-                </div>
+      {added ? "Added to Cart!" : "Add to Cart"}
+    </button>
+  </div>
 
-                <button
-                  type="button"
-                  className={`product-add-cart-button ${
-                    added ? "product-added" : ""
-                  }`}
-                  onClick={handleAddToCart}
-                >
-                  {added ? <FaCheck /> : <FaShoppingCart />}
+  {/* Purchase links */}
+  <div className="product-purchase-links">
+    <Link
+      to="/checkout"
+      state={{
+        buyNow: true,
+        productId: product.id,
+        quantity,
+      }}
+      className="product-buy-now-button"
+    >
+      Buy Now <span>→</span>
+    </Link>
 
-                  {added ? "Added to Cart!" : "Add to Cart"}
-                </button>
+    <Link
+      to="/cart"
+      className="product-view-cart-link"
+    >
+      <FaShoppingCart />
+      View Cart ({cartCount})
+    </Link>
 
-              </div>
-
-              {/* Buy now */}
-              <Link
-                to="/checkout"
-                state={{
-                  buyNow: true,
-                  productId: product.id,
-                  quantity,
-                }}
-                className="product-buy-now-button"
-              >
-                Buy Now
-                <span>→</span>
-              </Link>
-
-              {/* Cart link */}
-             <Link
-  to="/checkout"
-  className="product-view-cart-link"
->
-  <FaShoppingCart />
-  View Cart ({cartCount})
-</Link>
-              {/* Back to shop */}
-              <Link
-                to="/shop"
-                className="product-back-shop-link"
-              >
-                <FaArrowLeft />
-                Continue Shopping
-              </Link>
-
+    <Link
+      to="/shop"
+      className="product-back-shop-link"
+    >
+      <FaArrowLeft />
+      Continue Shopping
+    </Link>
+  </div>
+</div>
+              
             </div>
           </section>
 

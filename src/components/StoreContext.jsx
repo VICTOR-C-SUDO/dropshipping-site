@@ -7,46 +7,47 @@ import {
 
 const StoreContext = createContext(null);
 
+// VIK GADGETS PRODUCTS
 const initialProducts = [
   {
     id: 1,
     name: "Wireless Headphones",
     category: "Audio",
-    price: 35000,
-    oldPrice: 45000,
+    price: 18500,
+    oldPrice: 24000,
     rating: 4.8,
-    reviews: 24,
-    badge: "Popular",
+    reviews: 124,
+    badge: "BEST SELLER",
     image:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600",
     description:
-      "Enjoy your favourite music with comfortable wireless headphones designed for everyday use.",
+      "Enjoy clear sound and comfortable listening with these premium wireless headphones.",
   },
   {
     id: 2,
     name: "Smart Watch",
-    category: "Wearables",
-    price: 42000,
-    oldPrice: 55000,
+    category: "Accessories",
+    price: 25000,
+    oldPrice: 32000,
     rating: 4.7,
-    reviews: 18,
-    badge: "New",
+    reviews: 98,
+    badge: "POPULAR",
     image:
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600",
     description:
-      "Keep track of your daily activities with a stylish smartwatch.",
+      "A stylish smartwatch for everyday use, activity tracking, and notifications.",
   },
   {
     id: 3,
     name: "Premium Power Bank",
     category: "Power",
-    price: 28000,
-    oldPrice: 35000,
-    rating: 4.6,
-    reviews: 31,
-    badge: "Best Seller",
+    price: 22000,
+    oldPrice: 28500,
+    rating: 4.9,
+    reviews: 156,
+    badge: "TOP RATED",
     image:
-      "https://images.unsplash.com/photo-1609592424854-5e3f3c1b4f8f?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=600",
     description:
       "Keep your devices powered while travelling, working, or relaxing.",
   },
@@ -54,55 +55,52 @@ const initialProducts = [
     id: 4,
     name: "Wireless Charger",
     category: "Power",
-    price: 18000,
-    oldPrice: 25000,
-    rating: 4.5,
-    reviews: 15,
-    badge: "Hot",
+    price: 15000,
+    oldPrice: 19500,
+    rating: 4.6,
+    reviews: 76,
+    badge: "NEW",
     image:
-      "https://images.unsplash.com/photo-1591290619762-c588f7a0f7f8?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1591290619762-c588b0f8d6e0?w=600",
     description:
-      "Enjoy a convenient charging experience with a modern wireless charger.",
+      "A convenient wireless charging accessory for compatible devices.",
   },
   {
     id: 5,
     name: "Bluetooth Speaker",
     category: "Audio",
-    price: 30000,
-    oldPrice: 38000,
+    price: 28000,
+    oldPrice: 35000,
     rating: 4.8,
-    reviews: 42,
-    badge: "Popular",
+    reviews: 112,
+    badge: "TRENDING",
     image:
-      "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600",
     description:
-      "Enjoy music at home or on the go with this portable Bluetooth speaker.",
+      "Enjoy your favourite music with a portable Bluetooth speaker.",
   },
   {
     id: 6,
     name: "Phone Stand",
     category: "Accessories",
-    price: 12000,
-    oldPrice: 16000,
-    rating: 4.4,
-    reviews: 12,
-    badge: "Deal",
+    price: 8500,
+    oldPrice: 12000,
+    rating: 4.5,
+    reviews: 64,
+    badge: "GREAT VALUE",
     image:
-      "https://images.unsplash.com/photo-1601598851547-4302969d8e2f?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=600",
     description:
-      "Keep your phone comfortably positioned for watching videos and making calls.",
+      "A practical stand for hands-free viewing at home, school, or work.",
   },
 ];
 
-function readStorage(key, fallback = []) {
+// Safely read saved data from localStorage.
+function readStorage(key, fallback) {
   try {
-    const saved = localStorage.getItem(key);
+    const savedData = localStorage.getItem(key);
 
-    if (!saved) return fallback;
-
-    const parsed = JSON.parse(saved);
-
-    return Array.isArray(parsed) ? parsed : fallback;
+    return savedData ? JSON.parse(savedData) : fallback;
   } catch {
     return fallback;
   }
@@ -111,20 +109,40 @@ function readStorage(key, fallback = []) {
 export function StoreProvider({ children }) {
   const [products] = useState(initialProducts);
 
-  const [cart, setCart] = useState(() =>
-    readStorage("vik-cart")
-  );
+  // Load saved cart items.
+  const [cart, setCart] = useState(() => {
+    const savedCart = readStorage("vik-cart", []);
 
-  const [favorites, setFavorites] = useState(() =>
-    readStorage("vik-favorites")
-  );
+    if (!Array.isArray(savedCart)) {
+      return [];
+    }
+
+    return savedCart
+      .filter(
+        (item) =>
+          item &&
+          item.id !== undefined &&
+          Number(item.quantity) > 0
+      )
+      .map((item) => ({
+        ...item,
+        quantity: Math.max(1, Math.floor(Number(item.quantity))),
+      }));
+  });
+
+  // Load saved favourite product IDs.
+  const [favorites, setFavorites] = useState(() => {
+    const savedFavorites = readStorage("vik-favorites", []);
+
+    return Array.isArray(savedFavorites) ? savedFavorites : [];
+  });
 
   // Save cart whenever it changes.
   useEffect(() => {
     localStorage.setItem("vik-cart", JSON.stringify(cart));
   }, [cart]);
 
-  // Save favorites whenever they change.
+  // Save favourites whenever they change.
   useEffect(() => {
     localStorage.setItem(
       "vik-favorites",
@@ -132,91 +150,118 @@ export function StoreProvider({ children }) {
     );
   }, [favorites]);
 
-  // Add a product to the cart.
+  // ADD PRODUCT TO CART.
   const addToCart = (product, quantity = 1) => {
-    if (!product || quantity < 1) return;
+    if (!product || product.id === undefined) {
+      return;
+    }
 
-    setCart((currentCart) => {
-      const existingProduct = currentCart.find(
+    const amount = Math.max(
+      1,
+      Math.floor(Number(quantity) || 1)
+    );
+
+    setCart((previousCart) => {
+      const existingItem = previousCart.find(
         (item) => item.id === product.id
       );
 
-      if (existingProduct) {
-        return currentCart.map((item) =>
+      if (existingItem) {
+        return previousCart.map((item) =>
           item.id === product.id
             ? {
                 ...item,
-                quantity: item.quantity + quantity,
+                quantity: Number(item.quantity) + amount,
               }
             : item
         );
       }
 
       return [
-        ...currentCart,
+        ...previousCart,
         {
           ...product,
-          quantity,
+          quantity: amount,
         },
       ];
     });
   };
 
-  // Remove a product completely.
+  // REMOVE PRODUCT COMPLETELY FROM CART.
   const removeFromCart = (productId) => {
-    setCart((currentCart) =>
-      currentCart.filter((item) => item.id !== productId)
+    setCart((previousCart) =>
+      previousCart.filter((item) => item.id !== productId)
     );
   };
 
-  // Change product quantity.
+  // UPDATE QUANTITY.
+  // The quantity supplied here is the NEW quantity,
+  // not an amount to add or subtract.
   const updateQuantity = (productId, quantity) => {
-    if (quantity <= 0) {
-      removeFromCart(productId);
+    const newQuantity = Number(quantity);
+
+    // Do not allow invalid quantities or quantities below 1.
+    if (
+      !Number.isFinite(newQuantity) ||
+      newQuantity < 1
+    ) {
       return;
     }
 
-    setCart((currentCart) =>
-      currentCart.map((item) =>
+    const safeQuantity = Math.floor(newQuantity);
+
+    setCart((previousCart) =>
+      previousCart.map((item) =>
         item.id === productId
           ? {
               ...item,
-              quantity,
+              quantity: safeQuantity,
             }
           : item
       )
     );
   };
 
-  // Empty the cart.
+  // EMPTY THE ENTIRE CART.
   const clearCart = () => {
     setCart([]);
   };
 
-  // Add or remove a favorite.
+  // ADD OR REMOVE A FAVOURITE.
   const toggleFavorite = (productId) => {
-    setFavorites((currentFavorites) =>
-      currentFavorites.includes(productId)
-        ? currentFavorites.filter((id) => id !== productId)
-        : [...currentFavorites, productId]
-    );
+    setFavorites((previousFavorites) => {
+      const alreadyFavorite = previousFavorites.includes(productId);
+
+      if (alreadyFavorite) {
+        return previousFavorites.filter(
+          (id) => id !== productId
+        );
+      }
+
+      return [...previousFavorites, productId];
+    });
   };
 
-  const isFavorite = (productId) =>
-    favorites.includes(productId);
+  // CHECK WHETHER A PRODUCT IS A FAVOURITE.
+  const isFavorite = (productId) => {
+    return favorites.includes(productId);
+  };
 
-  // Total number of items in the cart.
+  // TOTAL NUMBER OF ITEMS, INCLUDING QUANTITIES.
   const cartCount = cart.reduce(
-    (total, item) => total + item.quantity,
+    (total, item) => total + Number(item.quantity || 0),
     0
   );
 
-  // Total price of all cart items.
+  // TOTAL PRICE OF THE CART.
   const cartTotal = cart.reduce(
-    (total, item) => total + item.price * item.quantity,
+    (total, item) =>
+      total +
+      Number(item.price || 0) * Number(item.quantity || 0),
     0
   );
 
+  // GET COMPLETE FAVOURITE PRODUCT OBJECTS.
   const favoriteProducts = products.filter((product) =>
     favorites.includes(product.id)
   );
@@ -224,10 +269,10 @@ export function StoreProvider({ children }) {
   const value = {
     products,
     cart,
-    cartCount,
-    cartTotal,
     favorites,
     favoriteProducts,
+    cartCount,
+    cartTotal,
     addToCart,
     removeFromCart,
     updateQuantity,
@@ -243,14 +288,17 @@ export function StoreProvider({ children }) {
   );
 }
 
+// ACCESS STORE DATA AND FUNCTIONS.
 export function useStore() {
   const context = useContext(StoreContext);
 
   if (!context) {
     throw new Error(
-      "useStore must be used inside StoreProvider"
+      "useStore must be used inside a StoreProvider"
     );
   }
 
   return context;
 }
+
+export default StoreContext;

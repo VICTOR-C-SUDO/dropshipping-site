@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+
 import {
   FaBolt,
   FaFacebookF,
@@ -14,29 +15,41 @@ import {
 export default function Footer() {
   return (
     <footer className="site-footer">
+
       {/* Newsletter */}
       <div className="footer-newsletter">
         <div className="footer-newsletter-inner">
+
           <div>
-            <span className="footer-eyebrow">STAY CONNECTED</span>
+            <span className="footer-eyebrow">
+              STAY CONNECTED
+            </span>
+
             <h2>Get the latest from VIK GADGETS.</h2>
+
             <p>
-              New gadgets, exclusive offers and useful tech delivered straight
-              to your inbox.
+              New gadgets, exclusive offers and useful tech
+              delivered straight to your inbox.
             </p>
           </div>
 
-          <form className="footer-subscribe">
+          <form
+            className="footer-subscribe"
+            onSubmit={(event) => event.preventDefault()}
+          >
             <input
               type="email"
               placeholder="Enter your email address"
               aria-label="Email address"
+              required
             />
+
             <button type="submit">
               Subscribe
               <FaArrowRight />
             </button>
           </form>
+
         </div>
       </div>
 
@@ -47,6 +60,7 @@ export default function Footer() {
 
             {/* Brand */}
             <div className="footer-brand">
+
               <Link to="/" className="footer-logo">
                 <span className="footer-logo-icon">
                   <FaBolt />
@@ -58,26 +72,42 @@ export default function Footer() {
               </Link>
 
               <p>
-                Smart gadgets, useful tech and everyday accessories designed
-                to make life easier.
+                Smart gadgets, useful tech and everyday
+                accessories designed to make life easier.
               </p>
 
+              {/* Social Media */}
               <div className="footer-socials">
-                <a href="#" aria-label="Facebook">
+
+                <a
+                  href="https://www.facebook.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook"
+                >
                   <FaFacebookF />
                 </a>
 
-                <a href="#" aria-label="Instagram">
+                <a
+                  href="https://www.instagram.com/@shopvikgadgets"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                >
                   <FaInstagram />
                 </a>
 
-                <a href="   http://www.tiktok.com/@shopvikgadget" target="_blank"rel="noopener noreferrer " aria-label="TikTok">
+                <a
+                  href="https://www.tiktok.com/@shopvikgadget"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="TikTok"
+                >
                   <FaTiktok />
                 </a>
 
-                <a href="#" aria-label="Twitter">
-                  <FaTwitter />
-                </a>
+              
+
               </div>
             </div>
 
@@ -98,8 +128,8 @@ export default function Footer() {
 
               <Link to="/about">About Us</Link>
               <Link to="/contact">Contact</Link>
-              <Link to="/ordertracking">Track Order</Link>
-              <Link to="/favourite">Wishlist</Link>
+              <Link to="/order-tracking">Track Order</Link>
+              <Link to="/favorites">Wishlist</Link>
               <Link to="/checkout">Checkout</Link>
             </div>
 
@@ -109,14 +139,26 @@ export default function Footer() {
 
               <Link to="/contact">Help Center</Link>
               <Link to="/contact">Shipping Information</Link>
-              <Link to="/contact">Returns & Refunds</Link>
-              <Link to="/contact">Privacy Policy</Link>
-              <Link to="/contact">Terms & Conditions</Link>
+              <Link to="/contact">Returns &amp; Refunds</Link>
+
+              <Link to="/privacy-policy">
+                Privacy Policy
+              </Link>
+
+              <Link to="/terms">
+                Terms &amp; Conditions
+              </Link>
+
+              <Link to="/cookies-policy">
+                Cookies Policy
+              </Link>
             </div>
+
           </div>
 
-          {/* Trust features */}
+          {/* Trust Features */}
           <div className="footer-features">
+
             <div className="footer-feature">
               <div className="footer-feature-icon">
                 <FaShieldAlt />
@@ -124,7 +166,9 @@ export default function Footer() {
 
               <div>
                 <strong>Secure Shopping</strong>
-                <span>Your information stays protected.</span>
+                <span>
+                  Your information stays protected.
+                </span>
               </div>
             </div>
 
@@ -135,7 +179,9 @@ export default function Footer() {
 
               <div>
                 <strong>Reliable Delivery</strong>
-                <span>We make getting your order simple.</span>
+                <span>
+                  We make getting your order simple.
+                </span>
               </div>
             </div>
 
@@ -146,26 +192,32 @@ export default function Footer() {
 
               <div>
                 <strong>Customer Support</strong>
-                <span>We're here when you need us.</span>
+                <span>
+                  We're here when you need us.
+                </span>
               </div>
             </div>
+
           </div>
 
-          {/* Bottom */}
+          {/* Footer Bottom */}
           <div className="footer-bottom">
+
             <p>
-              © {new Date().getFullYear()} <strong>VIK GADGETS</strong>. All
-              rights reserved.
+              © {new Date().getFullYear()}{" "}
+              <strong>VIK GADGETS</strong>. All rights reserved.
             </p>
 
             <div className="footer-bottom-links">
-              <Link to="/contact">Privacy</Link>
-              <Link to="/contact">Terms</Link>
-              <Link to="/contact">Cookies</Link>
+              <Link to="/privacy-policy">Privacy</Link>
+              <Link to="/terms">Terms</Link>
+              <Link to="/cookies-policy">Cookies</Link>
             </div>
+
           </div>
         </div>
       </div>
+
     </footer>
   );
 }

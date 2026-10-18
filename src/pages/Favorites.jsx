@@ -1,103 +1,126 @@
-import { Link } from "react-router-dom";
 import {
   FaHeart,
-  FaArrowRight,
-  FaShoppingBag,
+  FaShoppingCart,
+  FaTrashAlt,
 } from "react-icons/fa";
-
 import Footer from "../components/Footer";
-import ProductCard from "../components/ProductCard";
+import { Link } from "react-router-dom";
 import { useStore } from "../components/StoreContext";
 
+
+
 function Favorites() {
-  const { favoriteProducts } = useStore();
+  const {
+    favoriteProducts,
+    toggleFavorite,
+    addToCart,
+  } = useStore();
 
   return (
-    <>
-      <main className="favorites-page">
-        {/* HEADER */}
-        <section className="favorites-header">
-          <span className="section-label">
-            <FaHeart /> YOUR COLLECTION
-          </span>
-
-          <h1>
-            Your <span>Favorites.</span>
-          </h1>
-
-          <p>
-            All the gadgets you've saved, collected in one place.
-          </p>
-
-          <div className="favorites-count">
-            <FaHeart />
-            <span>
-              {favoriteProducts.length}{" "}
-              {favoriteProducts.length === 1
-                ? "product"
-                : "products"}{" "}
-              saved
+    <main className="fav-page">
+      <section className="fav-container">
+        <div className="fav-heading">
+          <div>
+            <span className="fav-subtitle">
+              YOUR COLLECTION
             </span>
+
+            <h1>
+              My Favourites <FaHeart />
+            </h1>
+
+            <p>Your favourite gadgets, all in one place.</p>
           </div>
-        </section>
 
-        {/* FAVORITE PRODUCTS */}
-        {favoriteProducts.length > 0 ? (
-          <section className="favorites-products">
-            <div className="favorites-section-heading">
-              <div>
-                <h2>Saved for you</h2>
-                <p>
-                  Your favourite gadgets, ready to explore.
-                </p>
-              </div>
+          <span className="fav-count">
+            {favoriteProducts.length}{" "}
+            {favoriteProducts.length === 1
+              ? "product"
+              : "products"}
+          </span>
+        </div>
 
-              <Link
-                to="/shop"
-                className="favorites-continue-link"
-              >
-                Continue shopping <FaArrowRight />
-              </Link>
-            </div>
+        {favoriteProducts.length === 0 ? (
+          <div className="fav-empty">
+            <FaHeart className="fav-empty-icon" />
 
-            <div className="products-grid">
-              {favoriteProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                />
-              ))}
-            </div>
-          </section>
-        ) : (
-          /* EMPTY STATE */
-          <section className="empty-favorites">
-            <div className="empty-favorites-icon">
-              <FaHeart />
-            </div>
-
-            <span className="empty-favorites-label">
-              NOTHING SAVED YET
-            </span>
-
-            <h2>Your collection is waiting.</h2>
+            <h2>No favourites yet</h2>
 
             <p>
-              Found something you love? Tap the heart on any
-              product to save it here for later.
+              Visit our shop and click the heart on a product
+              to save it here.
             </p>
 
-            <Link to="/shop" className="primary-btn">
-              <FaShoppingBag />
+            <Link to="/shop" className="fav-shop-btn">
               Explore Products
-              <FaArrowRight />
             </Link>
-          </section>
-        )}
-      </main>
+          </div>
+        ) : (
+          <div className="fav-grid">
+            {favoriteProducts.map((product) => (
+              <article
+                className="fav-card"
+                key={product.id}
+              >
+                <div className="fav-image">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                  />
 
-      <Footer />
-    </>
+                  {product.badge && (
+                    <span className="fav-badge">
+                      {product.badge}
+                    </span>
+                  )}
+                </div>
+
+                <div className="fav-info">
+                  <span className="fav-category">
+                    {product.category}
+                  </span>
+
+                  <h3>{product.name}</h3>
+
+                  <div className="fav-prices">
+                    <strong className="fav-price">
+                      ₦{Number(product.price).toLocaleString("en-NG")}
+                    </strong>
+
+                    {product.oldPrice != null && (
+                      <del className="fav-old-price">
+                        ₦
+                        {Number(product.oldPrice).toLocaleString("en-NG")}
+                      </del>
+                    )}
+                  </div>
+
+                  <div className="fav-actions">
+                    <button
+                      type="button"
+                      className="fav-cart-btn"
+                      onClick={() => addToCart(product)}
+                    >
+                      <FaShoppingCart /> Add to Cart
+                    </button>
+
+                    <button
+                      type="button"
+                      className="fav-remove-btn"
+                      onClick={() => toggleFavorite(product.id)}
+                      aria-label="Remove from favourites"
+                    >
+                      <FaTrashAlt />
+                    </button>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
+       <Footer />
+    </main>
   );
 }
 

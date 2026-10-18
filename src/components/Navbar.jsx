@@ -1,7 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
 import {
   FaBolt,
-  FaShoppingCart,
+  FaShoppingBag,
   FaHeart,
   FaMoon,
   FaSun,
@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 
 import { useState } from "react";
-import { useStore } from "../components/StoreContext";
+import { useStore } from "./StoreContext";
 import { useTheme } from "../components/ThemeContext";
 
 function Navbar() {
@@ -109,24 +109,17 @@ function Navbar() {
               </span>
             )}
           </Link>
+<Link to="/cart" className="navbar-cart">
+  <FaShoppingBag className="navbar-cart-icon" />
 
-          {/* CART */}
-          <Link
-            to="/checkout"
-            className="navbar-action cart-action"
-            aria-label={`Shopping cart, ${cartCount} items`}
-            title="Shopping cart"
-            onClick={closeMenu}
-          >
-            <FaShoppingCart />
+  {cartCount > 0 && (
+    <span className="cart-badge">
+      {cartCount > 99 ? "99+" : cartCount}
+    </span>
+  )}
 
-            {cartCount > 0 && (
-              <span className="navbar-badge">
-                {cartCount > 99 ? "99+" : cartCount}
-              </span>
-            )}
-          </Link>
-
+  <span className="cart-tooltip">My Cart</span>
+</Link>
           {/* THEME TOGGLE */}
           <button
             type="button"

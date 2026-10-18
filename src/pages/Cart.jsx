@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
+
 import {
-  FaShoppingCart,
-  FaTrash,
-  FaPlus,
+  FaTrashAlt,
   FaMinus,
+  FaPlus,
+  FaShoppingBag,
   FaArrowLeft,
-  FaShieldAlt,
 } from "react-icons/fa";
 
 import { useStore } from "../components/StoreContext";
@@ -16,213 +16,227 @@ function Cart() {
     cart,
     cartCount,
     cartTotal,
-    removeFromCart,
     updateQuantity,
+    removeFromCart,
+    clearCart,
   } = useStore();
 
   const formatPrice = (price) =>
-    `₦${Number(price).toLocaleString("en-NG")}`;
+    `₦${Number(price || 0).toLocaleString("en-NG")}`;
 
   return (
-    <>
-      <main className="cart-page">
-        <div className="cart-container">
+    <main className="cart-page">
+      <div className="cart-container">
+        {/* PAGE HEADER */}
+        <header className="cart-heading">
+          <span className="cart-eyebrow">
+            VIK GADGETS STORE
+          </span>
 
-          {/* Header */}
-          <div className="cart-header">
-            <span className="cart-eyebrow">
-              VIK GADGETS STORE
-            </span>
+          <h1>Shopping Cart</h1>
 
-            <h1>
-              Your <span>Shopping Cart</span>
-            </h1>
+          <p>
+            Review your selected gadgets before checkout.
+          </p>
+        </header>
+
+        {/* EMPTY CART */}
+        {cart.length === 0 ? (
+          <section className="cart-empty">
+            <div className="cart-empty-icon">
+              <FaShoppingBag />
+            </div>
+
+            <h2>Your cart is empty</h2>
 
             <p>
-              Review your selected gadgets before checkout.
+              You haven't added any gadgets to your cart yet.
+              Discover something you love!
             </p>
-          </div>
 
-          {/* Empty Cart */}
-          {!cart || cart.length === 0 ? (
-            <section className="cart-empty">
-              <div className="cart-empty-icon">
-                <FaShoppingCart />
+            <Link to="/shop" className="cart-primary-btn">
+              Explore Products
+            </Link>
+          </section>
+        ) : (
+          /* CART CONTENT */
+          <div className="cart-layout">
+            {/* CART PRODUCTS */}
+            <section className="cart-items-section">
+              <div className="cart-items-header">
+                <h2>Your Items</h2>
+
+                <span>
+                  {cartCount}{" "}
+                  {cartCount === 1 ? "item" : "items"}
+                </span>
               </div>
 
-              <h2>Your cart is empty</h2>
+              <div className="cart-items-list">
+                {cart.map((item) => (
+                  <article
+                    className="cart-item"
+                    key={item.id}
+                  >
+                    {/* PRODUCT IMAGE */}
+                    <div className="cart-item-image">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        onError={(event) => {
+                          event.currentTarget.style.visibility =
+                            "hidden";
+                        }}
+                      />
+                    </div>
 
-              <p>
-                You haven't added any gadgets yet.
-                Explore our collection and find something you love.
-              </p>
+                    {/* PRODUCT INFORMATION */}
+                    <div className="cart-item-details">
+                      <span className="cart-item-category">
+                        {item.category}
+                      </span>
 
-              <Link to="/shop" className="cart-primary-button">
-                <FaArrowLeft />
-                Continue Shopping
-              </Link>
-            </section>
-          ) : (
-            <div className="cart-layout">
+                      <h3>{item.name}</h3>
 
-              {/* Cart Items */}
-              <section className="cart-items-section">
-                <div className="cart-items-heading">
-                  <h2>Shopping Items</h2>
+                      <p className="cart-item-price">
+                        {formatPrice(item.price)}
+                      </p>
 
-                  <span>
-                    {cartCount} {cartCount === 1 ? "item" : "items"}
-                  </span>
-                </div>
+                      {/* QUANTITY CONTROLS */}
+                      <div className="cart-item-actions">
+                        <div className="cart-quantity">
+                          <button
+                            type="button"
+                            aria-label={`Decrease ${item.name} quantity`}
+                            disabled={
+                              Number(item.quantity) <= 1
+                            }
+                            onClick={() => {
+                              updateQuantity(
+                                item.id,
+                                Number(item.quantity) - 1
+                              );
+                            }}
+                          >
+                            <FaMinus />
+                          </button>
 
-                <div className="cart-items">
-                  {cart.map((item) => (
-                    <article
-                      className="cart-item"
-                      key={item.id}
-                    >
-                      <Link
-                        to={`/product/${item.id}`}
-                        className="cart-item-image"
-                      >
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                        />
-                      </Link>
-
-                      <div className="cart-item-details">
-                        <span className="cart-item-category">
-                          {item.category || "Gadget"}
-                        </span>
-
-                        <Link
-                          to={`/product/${item.id}`}
-                          className="cart-item-name"
-                        >
-                          {item.name}
-                        </Link>
-
-                        <strong className="cart-item-price">
-                          {formatPrice(item.price)}
-                        </strong>
-
-                        <div className="cart-item-actions">
-                          <div className="cart-quantity">
-                            <button
-                              type="button"
-                              onClick={() =>
-                                updateQuantity(
-                                  item.id,
-                                  item.quantity - 1
-                                )
-                              }
-                              disabled={item.quantity <= 1}
-                              aria-label="Decrease quantity"
-                            >
-                              <FaMinus />
-                            </button>
-
-                            <span>{item.quantity}</span>
-
-                            <button
-                              type="button"
-                              onClick={() =>
-                                updateQuantity(
-                                  item.id,
-                                  item.quantity + 1
-                                )
-                              }
-                              aria-label="Increase quantity"
-                            >
-                              <FaPlus />
-                            </button>
-                          </div>
+                          <span>{item.quantity}</span>
 
                           <button
                             type="button"
-                            className="cart-remove-button"
-                            onClick={() => removeFromCart(item.id)}
+                            aria-label={`Increase ${item.name} quantity`}
+                            onClick={() => {
+                              updateQuantity(
+                                item.id,
+                                Number(item.quantity) + 1
+                              );
+                            }}
                           >
-                            <FaTrash />
-                            Remove
+                            <FaPlus />
                           </button>
                         </div>
+
+                        <button
+                          type="button"
+                          className="cart-remove-btn"
+                          onClick={() =>
+                            removeFromCart(item.id)
+                          }
+                        >
+                          <FaTrashAlt />
+                          Remove
+                        </button>
                       </div>
+                    </div>
 
-                      <div className="cart-item-subtotal">
-                        <span>Subtotal</span>
+                    {/* ITEM SUBTOTAL */}
+                    <div className="cart-item-subtotal">
+                      <span>Subtotal</span>
 
-                        <strong>
-                          {formatPrice(
-                            Number(item.price) * item.quantity
-                          )}
-                        </strong>
-                      </div>
-                    </article>
-                  ))}
-                </div>
+                      <strong>
+                        {formatPrice(
+                          Number(item.price) *
+                            Number(item.quantity)
+                        )}
+                      </strong>
+                    </div>
+                  </article>
+                ))}
+              </div>
 
-                <Link to="/shop" className="cart-continue-link">
+              {/* BOTTOM ACTIONS */}
+              <div className="cart-bottom-actions">
+                <Link to="/shop" className="cart-back-link">
                   <FaArrowLeft />
                   Continue Shopping
                 </Link>
-              </section>
 
-              {/* Order Summary */}
-              <aside className="cart-summary">
-                <h2>Order Summary</h2>
-
-                <div className="cart-summary-row">
-                  <span>Items ({cartCount})</span>
-
-                  <strong>{formatPrice(cartTotal)}</strong>
-                </div>
-
-                <div className="cart-summary-row">
-                  <span>Shipping</span>
-
-                  <span className="cart-shipping-note">
-                    Calculated at checkout
-                  </span>
-                </div>
-
-                <div className="cart-summary-divider" />
-
-                <div className="cart-summary-total">
-                  <span>Subtotal</span>
-
-                  <strong>{formatPrice(cartTotal)}</strong>
-                </div>
-
-                <p className="cart-shipping-info">
-                  Final delivery charges will be confirmed during checkout.
-                </p>
-
-                <Link
-                  to="/checkout"
-                  className="cart-checkout-button"
+                <button
+                  type="button"
+                  className="cart-clear-btn"
+                  onClick={clearCart}
                 >
-                  Proceed to Checkout
-                  <span>→</span>
-                </Link>
+                  <FaTrashAlt />
+                  Clear Cart
+                </button>
+              </div>
+            </section>
 
-                <div className="cart-secure-note">
-                  <FaShieldAlt />
+            {/* ORDER SUMMARY */}
+            <aside className="cart-summary">
+              <h2>Order Summary</h2>
 
-                  <span>
-                    Secure shopping experience
-                  </span>
-                </div>
-              </aside>
+              <div className="cart-summary-row">
+                <span>Total Items</span>
+                <strong>{cartCount}</strong>
+              </div>
 
-            </div>
-          )}
-        </div>
-      </main>
+              <div className="cart-summary-row">
+                <span>Subtotal</span>
+                <strong>{formatPrice(cartTotal)}</strong>
+              </div>
 
+              <div className="cart-summary-row">
+                <span>Delivery</span>
+                <span className="cart-delivery-note">
+                  Calculated later
+                </span>
+              </div>
+
+              <div className="cart-summary-divider" />
+
+              <div className="cart-summary-total">
+                <span>Total</span>
+
+                <strong>{formatPrice(cartTotal)}</strong>
+              </div>
+
+              <p className="cart-summary-note">
+                Delivery fees, if applicable, will be confirmed
+                before your order is completed.
+              </p>
+
+              <Link
+                to="/checkout"
+                className="cart-checkout-btn"
+              >
+                Proceed to Checkout
+              </Link>
+
+              <div className="cart-secure-note">
+                <FaShoppingBag />
+                <span>
+                  Thank you for shopping with VIK GADGETS
+                </span>
+              </div>
+            </aside>
+          </div>
+        )}
+      </div>
       <Footer />
-    </>
+    </main>
+    
   );
 }
 

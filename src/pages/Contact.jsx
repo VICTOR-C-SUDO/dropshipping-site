@@ -1,18 +1,16 @@
 import { useState } from "react";
+
 import {
   FaComments,
   FaBoxOpen,
   FaInstagram,
   FaArrowRight,
-  FaCheckCircle,
   FaBolt,
 } from "react-icons/fa";
 
 import Footer from "../components/Footer";
 
 function Contact() {
-  const [submitted, setSubmitted] = useState(false);
-
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -27,23 +25,23 @@ function Contact() {
       ...current,
       [name]: value,
     }));
-
-    if (submitted) {
-      setSubmitted(false);
-    }
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    setSubmitted(true);
+    const whatsappMessage =
+      `Name: ${form.name}\n` +
+      `Email: ${form.email}\n` +
+      `Subject: ${form.subject}\n` +
+      `Message: ${form.message}`;
 
-    setForm({
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
-    });
+    const whatsappURL =
+      `https://wa.me/2349076494022?text=${encodeURIComponent(
+        whatsappMessage
+      )}`;
+
+    window.open(whatsappURL, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -160,25 +158,13 @@ function Contact() {
               </p>
             </div>
 
-            {submitted && (
-              <div className="contact-success">
-                <FaCheckCircle />
-
-                <div>
-                  <strong>Message sent successfully!</strong>
-                  <span>
-                    Thanks for contacting VIK GADGETS.
-                  </span>
-                </div>
-              </div>
-            )}
-
             <div className="contact-form-row">
               <div className="form-group">
                 <label htmlFor="name">Your Name</label>
 
                 <input
                   id="name"
+                  type="text"
                   name="name"
                   value={form.name}
                   onChange={handleChange}
@@ -207,6 +193,7 @@ function Contact() {
 
               <input
                 id="subject"
+                type="text"
                 name="subject"
                 value={form.subject}
                 onChange={handleChange}
@@ -238,7 +225,7 @@ function Contact() {
             </button>
 
             <p className="contact-form-note">
-              We usually respond as soon as possible.
+              You'll be redirected to WhatsApp to send your message.
             </p>
           </form>
         </section>

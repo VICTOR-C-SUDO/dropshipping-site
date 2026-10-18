@@ -88,55 +88,78 @@ function Checkout() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+ const handleSubmit = (event) => {
+  event.preventDefault();
 
-    if (cart.length === 0) {
-      alert("Your cart is empty. Please add products before checking out.");
-      return;
-    }
+  // Validate the form using your existing validation function.
+  if (!validateForm()) {
+    return;
+  }
 
-    if (!validateForm()) {
-      return;
-    }
+  // Make sure the cart contains products.
+  if (!cart || cart.length === 0) {
+    alert("Your cart is empty. Please add a product first.");
+    return;
+  }
 
-    const newOrderNumber = `VIK-${Date.now().toString().slice(-8)}`;
+  // Format prices in Nigerian Naira.
+  const formatPrice = (price) =>
+    `₦${Number(price ?? 0).toLocaleString("en-NG")}`;
 
-    const order = {
-      orderNumber: newOrderNumber,
-      customer: form,
-      items: cart,
-      subtotal,
-      shipping,
-      total,
-      createdAt: new Date().toISOString(),
-      status: "Pending",
-    };
+  // Prepare the products in the order.
+  const orderItems = cart
+    .map((item) => {
+      const quantity = Number(item.quantity ?? 1);
+      const price = Number(item.price ?? 0);
 
-    // Save the order in this browser.
-    try {
-      const previousOrders = JSON.parse(
-        localStorage.getItem("vik-orders") || "[]"
+      return (
+        `• ${item.name}\n` +
+        `  Quantity: ${quantity}\n` +
+        `  Unit price: ${formatPrice(price)}\n` +
+        `  Item total: ${formatPrice(price * quantity)}`
       );
+    })
+    .join("\n\n");
 
-      previousOrders.push(order);
+  // Convert the payment method into readable text.
+  const paymentMethod =
+    form.paymentMethod === "delivery"
+      ? "Pay on delivery"
+      : "Bank transfer";
 
-      localStorage.setItem("vik-orders", JSON.stringify(previousOrders));
-      localStorage.setItem("vik-last-order", JSON.stringify(order));
-    } catch (error) {
-      console.error("Could not save order:", error);
-      alert("Your order could not be saved. Please try again.");
-      return;
-    }
+  // Build the WhatsApp order message.
+  const message = `
+VIK GADGETS - NEW ORDER
 
-    setOrderNumber(newOrderNumber);
-    setOrderPlaced(true);
+CUSTOMER INFORMATION
+Name: ${form.fullName}
+Email: ${form.email}
+Phone: ${form.phone}
 
-    if (typeof clearCart === "function") {
-      clearCart();
-    }
-  };
+DELIVERY ADDRESS
+Street: ${form.address}
+City: ${form.city}
+State: ${form.state}
 
+PAYMENT METHOD
+${paymentMethod}
+
+ORDER DETAILS
+${orderItems}
+
+Subtotal: ${formatPrice(subtotal)}
+Shipping: ${shipping === 0 ? "Free" : formatPrice(shipping)}
+TOTAL: ${formatPrice(total)}
+
+Please confirm my order and provide delivery information.
+  `.trim();
+
+  // Open WhatsApp with the prepared order.
+  const whatsappURL =
+    `https://wa.me/2349076494022?text=${encodeURIComponent(message)}`;
+
+  window.open(whatsappURL, "_blank", "noopener,noreferrer");
+};
   return (
     <>
       <main className="checkout-page">
@@ -398,13 +421,12 @@ function Checkout() {
                         </span>
                       </div>
                     </section>
-
-                    <button
-                      type="submit"
-                      className="checkout-primary-btn checkout-submit"
-                    >
-                      Place order · {formatPrice(total)}
-                    </button>
+<button
+  type="submit"
+  className="checkout-place-order"
+>
+  Place Order · {formatPrice(cartTotal)}
+</button>
 
                     <p className="checkout-terms">
                       Please check your contact and delivery details before
@@ -1233,7 +1255,78 @@ body.dark-mode .checkout-primary-btn {
             font-size: 11px;
           }
         }
-      `}</style>
+      
+      /* PLACE ORDER BUTTON */
+.checkout-place-order {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  width: 100%;
+  min-height: 56px;
+  margin-top: 25px;
+  padding: 16px 22px;
+
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  color: #ffffff;
+
+  border: none;
+  border-radius: 14px;
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+
+  cursor: pointer;
+
+  box-shadow: 0 8px 22px rgba(124, 58, 237, 0.25);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+/* HOVER EFFECT */
+.checkout-place-order:hover {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+
+  transform: translateY(-3px);
+
+  box-shadow: 0 12px 28px rgba(124, 58, 237, 0.35);
+}
+
+/* CLICK EFFECT */
+.checkout-place-order:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+}
+
+/* KEYBOARD ACCESSIBILITY */
+.checkout-place-order:focus-visible {
+  outline: 3px solid #a78bfa;
+  outline-offset: 4px;
+}
+
+/* DARK MODE */
+.dark-mode .checkout-place-order,
+.dark .checkout-place-order {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: #ffffff;
+}
+
+/* MOBILE */
+@media (max-width: 520px) {
+  .checkout-place-order {
+    min-height: 54px;
+    padding: 15px;
+    font-size: 14px;
+    border-radius: 12px;
+  }
+}`}
+      </style>
     </>
   );
 }
