@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   FaHeart,
   FaShoppingCart,
@@ -23,11 +24,16 @@ function ProductCard({ product }) {
   return (
     <article className="product-card">
       <div className="product-image">
-        <img
-          src={product.image}
-          alt={product.name}
-          loading="lazy"
-        />
+        <Link
+          to={`/product/${product.id}`}
+          className="product-details-link"
+        >
+          <img
+            src={product.image}
+            alt={product.name}
+            loading="lazy"
+          />
+        </Link>
 
         {product.badge && (
           <span className="product-badge">
@@ -57,7 +63,12 @@ function ProductCard({ product }) {
           {product.category}
         </span>
 
-        <h3>{product.name}</h3>
+        <Link
+          to={`/product/${product.id}`}
+          className="product-name-link"
+        >
+          <h3>{product.name}</h3>
+        </Link>
 
         <div className="product-rating">
           <FaStar />

@@ -15548,3 +15548,24 @@ section,
 .hero {
   max-width: 100%;
 }
+/* Keep the Add to Cart quantity number white in dark mode */
+.dark .quantity-selector input,
+.dark-mode .quantity-selector input,
+[data-theme="dark"] .quantity-selector input {
+  color: #ffffff !important;
+  background-color: #252036;
+}
+/* Product quantity number - Light and dark mode */
+.product-quantity-control span {
+  color: #ffffff !important;
+}
+
+/* Quantity control background */
+.product-quantity-control {
+  background-color: #252036;
+}
+
+/* Quantity buttons */
+.product-quantity-control button {
+  color: #ffffff;
+}
