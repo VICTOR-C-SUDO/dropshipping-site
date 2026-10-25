@@ -13720,47 +13720,86 @@ html.dark .checkout-success{
   align-items: flex-start;
   gap: 20px;
   width: 100%;
-  margin-top: 28px;
+  margin-top: 28px; 
 }
-
 .product-purchase {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 14px;
-  width: 100%;
+
 }
-
+.product-quantity-control{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  width: fit-content;
+  border: 1px solid #7041c5;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #ffffff;
+  flex-shrink: 0;
+  
+}
 /* Quantity selector */
-
 .product-quantity-control button {
-  display: grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  min-width: 40px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
   color: #ffffff;
   background: #7041c5;
-
   border: none;
-  border-radius: 8px;
+  font-weight: 600;
+ line-height: 1;
   cursor: pointer;
-
   transition: 0.2s ease;
+  font-size: 24px;
+  
+  
+}
+
+.product-quantity-control span{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  height: 44px;
+  padding: 0 ;
+  margin: 0;
+  color: #222222;
+  background: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+}
+.product-quantity-control button:hover{
+background: #58309f;
+}
+.product-quantity-control button:focus-visible{
+  outline: 2px soliid #7041c5;
+  outline-offset: -3px;
 }
 html.dark .product-quantity-control button{
   color: white;
-  background: #7041c5;
+  background: #7041c5  ;
 }
 
 .product-quantity-control button:hover:not(:disabled) {
   color: #ffffff;
-  background: #5930a5;
+  background:  #5930a5 ;
+
 }
 
 .product-quantity-control button:disabled {
   color: #ffffff;
-  background: #a995cf;
+  background: #a995cf  ;
   opacity: 0.7;
   cursor: not-allowed;
 }
@@ -13782,7 +13821,7 @@ html.dark .product-quantity-control button{
   min-height: 48px;
   padding: 0 24px;
   color: #ffffff;
-  background: #7041c5;
+  background:  #7041c5;
   border: 1px solid #7041c5;
   border-radius: 12px;
   font-size: 14px;
@@ -15552,20 +15591,41 @@ section,
 .dark .quantity-selector input,
 .dark-mode .quantity-selector input,
 [data-theme="dark"] .quantity-selector input {
-  color: #ffffff !important;
+  color: black !important;
   background-color: #252036;
-}
-/* Product quantity number - Light and dark mode */
+  }
+ 
 .product-quantity-control span {
-  color: #ffffff !important;
+ font-size: 15px;
+ font-weight: 700;
+ width: 44px;
+ line-height: 1;
+ box-sizing: border-box;
+ color: white;
+ background: #101010;
+
+
 }
 
 /* Quantity control background */
 .product-quantity-control {
-  background-color: #252036;
+  background-color: #6d28d9;
+
 }
 
 /* Quantity buttons */
 .product-quantity-control button {
-  color: #ffffff;
+  color: white;
+  background: #6034b3;
+  font-size: 15px;
+  width: 40px;
+
+}
+html.dark .product-quantity-control button{
+  background: #6034b3;
+  color: #ffff;
+}
+html.light .product-quantity-control span{
+color: #6034b3;
+background: white;
 }
